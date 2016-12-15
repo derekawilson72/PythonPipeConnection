@@ -37,9 +37,9 @@ Python processes need to share data and/or Python users need to share data while
     reader, writer = Pipe()
     pickled_writer = pickle.dumps(reduce_connection(writer))
     passKey=current_process().authkey
-    ppC=pickledPipeConnector(pickled_writer,passKey)
-    ppC.conn=reader
-    ppC.recvPipeData()
+    ppC1=pickledPipeConnector(pickled_writer,passKey)
+    ppC1.conn=reader
+    ppC1.recvPipeData()
 
 
     # in shell 2
@@ -56,9 +56,9 @@ Python processes need to share data and/or Python users need to share data while
     upw = pickle.loads(pickled_writer)  #import pickled string
     writer = upw[0](upw[1][0],upw[1][1],upw[1][2])
     # writer = rebuild_connection(upw[1][0],upw[1][1],upw[1][2])
-    ppC=pickledPipeConnector(pickled_writer,passKey)
-    ppC.conn=writer
-    ppC.recvPipeData()
+    ppC2=pickledPipeConnector(pickled_writer,passKey)
+    ppC2.conn=writer
+    ppC2.recvPipeData()
 
     # # now do (almost) any send and recv
     # #in shell 2
@@ -67,11 +67,12 @@ Python processes need to share data and/or Python users need to share data while
 
 
     # #in shell one
-    ppC.data  ##should produce the data
+    ppC1.data  ##should produce the data
+    ['this is data', array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])]
     reader.send('hello back')
 
     # #in shell two
-    ppC.data ##should produce the message
-
+    ppC2.data ##should produce the message
+    'hello back'
 ```
 
